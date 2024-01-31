@@ -52,11 +52,11 @@ param appGroupFriendlyName string = 'testAP'
 // param logworkspaceName string
 
 @description('List of application group resource IDs to be added to Workspace. MUST add existing ones!')
-param applicationGroupReferences string
+// param applicationGroupReferences string
 
 var appGroupName = '${hostPoolName}-DAG'
 var appGroupResourceID = array(resourceId('Microsoft.DesktopVirtualization/applicationgroups/', appGroupName))
-var applicationGroupReferencesArr = applicationGroupReferences == '' ? appGroupResourceID : concat(split(applicationGroupReferences, ','), appGroupResourceID)
+// var applicationGroupReferencesArr = applicationGroupReferences == '' ? appGroupResourceID : concat(split(applicationGroupReferences, ','), appGroupResourceID)
 
 resource hostPool 'Microsoft.DesktopVirtualization/hostPools@2023-11-01-preview' = if (newBuild) {
   name: hostPoolName
@@ -98,7 +98,7 @@ resource workspace 'Microsoft.DesktopVirtualization/workspaces@2023-11-01-previe
   location: location
   tags: tags
   properties: {
-    applicationGroupReferences: applicationGroupReferencesArr
+    // applicationGroupReferences: applicationGroupReferencesArr
   }
   dependsOn: [
     applicationGroup
