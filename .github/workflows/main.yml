@@ -25,5 +25,5 @@ jobs:
       with:
         scope: 'subscription'
         region: 'westeurope'
-        template: ./biceptemplates/avd-infra.bicep
+        template: ./biceptemplates/avd-rgs.bicep
         failOnStdErr: false
