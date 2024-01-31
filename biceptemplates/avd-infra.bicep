@@ -9,7 +9,7 @@ param tags object = {
 // param workspaceLocation string
 
 @description('If true Host Pool, App Group and Workspace will be created. Default is to join Session Hosts to existing AVD environment')
-param newBuild bool = false
+param newBuild bool = true
 
 @description('Expiration time for the HostPool registration token. This must be up to 30 days from todays date.')
 // param tokenExpirationTime string
@@ -105,5 +105,3 @@ resource workspace 'Microsoft.DesktopVirtualization/workspaces@2023-11-01-previe
   ]
 
 }
-
-// comment to start a push!!

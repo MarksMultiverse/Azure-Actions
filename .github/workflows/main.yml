@@ -29,8 +29,7 @@ jobs:
     - name: Deploy AVD Infra
       uses: azure/arm-deploy@v1
       with: 
-        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-        resourceGroupName: ${{ secrets.AZURE_RG }}
+        resourceGroupName: 'RG01MARK'
         template: ./biceptemplates/avd-infra.bicep
         failOnStdErr: false
 
