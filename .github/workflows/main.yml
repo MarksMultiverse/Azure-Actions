@@ -20,10 +20,18 @@ jobs:
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-    - name: Deploy Bicep file
+    - name: Deploy Resource Groups
       uses: azure/arm-deploy@v1
       with:
         scope: 'subscription'
         region: 'westeurope'
         template: ./biceptemplates/avd-rgs.bicep
         failOnStdErr: false
+    
+    - name: Deploy AVD Infrastructure
+      uses: azure/arm-deploy@v1
+      with:
+        scope: 'resourcegroup'
+        resourceGroupName: 'RG01MARK'
+        template: ./biceptemplates/avd-infra.bicep
+        
