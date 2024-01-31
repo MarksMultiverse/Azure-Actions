@@ -24,8 +24,16 @@ jobs:
         scope: 'subscription'
         region: 'westeurope'
         template: ./biceptemplates/avd-rgs.bicep
-        failOnStdErr: false 
-    - name: Deploy Bicep file
+        failOnStdErr: false
+
+    - name: Deploy AVD Infra
+      uses: azure/arm-deploy@v1
+      with: 
+        resourceGroupName: ${{ secrets.AZURE_RG }}
+        template: ./biceptemplates/avd-infra.bicep
+        failOnStdErr: false
+
+    - name: Deploy Storage Account
       uses: azure/arm-deploy@v1
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
