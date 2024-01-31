@@ -12,14 +12,14 @@ param tags object = {
 param newBuild bool = false
 
 @description('Expiration time for the HostPool registration token. This must be up to 30 days from todays date.')
-param tokenExpirationTime string
+// param tokenExpirationTime string
 
 @allowed([
   'Personal'
   'Pooled'
 ])
 param hostPoolType string = 'Pooled'
-param hostPoolName string
+param hostPoolName string = 'testHP'
 
 @allowed([
   'Automatic'
@@ -39,11 +39,11 @@ param loadBalancerType string = 'BreadthFirst'
 // param customRdpProperty string
 
 @description('Friendly Name of the Host Pool, this is visible via the AVD client')
-param hostPoolFriendlyName string
+param hostPoolFriendlyName string = 'testHP'
 
 @description('Name of the AVD Workspace to used for this deployment')
 param workspaceName string = 'ABRI-AVD-PROD'
-param appGroupFriendlyName string
+param appGroupFriendlyName string = 'testAP'
 
 // @description('Log Analytics workspace ID to join AVD to.')
 // param logworkspaceID string
@@ -71,7 +71,7 @@ resource hostPool 'Microsoft.DesktopVirtualization/hostPools@2023-11-01-preview'
     maxSessionLimit: maxSessionLimit
     validationEnvironment: false
     registrationInfo: {
-      expirationTime: tokenExpirationTime
+      // expirationTime: tokenExpirationTime
       token: null
       registrationTokenOperation: 'Update'
     }
