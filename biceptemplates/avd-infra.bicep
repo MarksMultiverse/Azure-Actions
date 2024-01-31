@@ -73,7 +73,7 @@ resource hostPool 'Microsoft.DesktopVirtualization/hostPools@2023-11-01-preview'
     maxSessionLimit: maxSessionLimit
     validationEnvironment: false
     registrationInfo: {
-      // expirationTime: tokenExpirationTime
+      expirationTime: tokenExpirationTime
       token: null
       registrationTokenOperation: 'Update'
     }
