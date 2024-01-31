@@ -18,5 +18,5 @@ jobs:
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ secrets.AZURE_RG }}
-        template: ./biceptemplates/main.bicep
+        template: ./biceptemplates/avd-infra.bicep
         failOnStdErr: false
