@@ -24,5 +24,6 @@ jobs:
       uses: azure/arm-deploy@v1
       with:
         scope: 'subscription'
+        region: 'westeurope'
         template: ./biceptemplates/avd-infra.bicep
         failOnStdErr: false
