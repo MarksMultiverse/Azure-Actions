@@ -13,9 +13,6 @@ param tags object = {
 @description('If true Host Pool, App Group and Workspace will be created. Default is to join Session Hosts to existing AVD environment')
 param newBuild bool = true
 
-@description('Expiration time for the HostPool registration token. This must be up to 30 days from todays date.')
-param tokenExpirationTime string = '2024-02-01T14:36:44.081Z'
-
 @allowed([
   'Personal'
   'Pooled'
