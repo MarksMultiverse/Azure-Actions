@@ -29,6 +29,7 @@ jobs:
     - name: Deploy AVD Infra
       uses: azure/arm-deploy@v1
       with: 
+        scope: 'resourcegroup'
         resourceGroupName: 'RG01MARK'
         template: ./biceptemplates/avd-infra.bicep
         failOnStdErr: false

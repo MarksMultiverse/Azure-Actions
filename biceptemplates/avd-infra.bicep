@@ -10,6 +10,7 @@ param tags object = {
 @description('If true Host Pool, App Group and Workspace will be created. Default is to join Session Hosts to existing AVD environment')
 param newBuild bool = true
 
+// hostPool parameters
 @allowed([
   'Personal'
   'Pooled'
@@ -31,29 +32,25 @@ param maxSessionLimit int = 12
 ])
 param loadBalancerType string = 'BreadthFirst'
 
-// @description('Custom RDP properties to be applied to the AVD Host Pool.')
-// param customRdpProperty string
-
 @description('Friendly Name of the Host Pool, this is visible via the AVD client')
 param hostPoolFriendlyName string = 'testHP'
 
+// workspace parameters
 @description('Name of the AVD Workspace to used for this deployment')
 param workspaceName string = 'ABRI-AVD-PROD'
 param workspaceFriendlyName string = 'testWorkspace'
+
+// applicationGroup parameters
 param appGroupFriendlyName string = 'testAP'
-
-// @description('Log Analytics workspace ID to join AVD to.')
-// param logworkspaceID string
-// param logworkspaceSub string
-// param logworkspaceResourceGroup string
-// param logworkspaceName string
-
-@description('List of application group resource IDs to be added to Workspace. MUST add existing ones!')
-param applicationGroupReferences string
-
 var appGroupName = '${hostPoolName}-DAG'
-var appGroupResourceID = array(resourceId('Microsoft.DesktopVirtualization/applicationgroups/', appGroupName))
-var applicationGroupReferencesArr = applicationGroupReferences == '' ? appGroupResourceID : concat(split(applicationGroupReferences, ','), appGroupResourceID)
+
+// vnet parameters
+param AVDnetworkname string = 'AVDnetwork'
+param AVDvnetAddressPrefix string ='10.0.0.0/24'
+param AVDsubnet1name string = 'AVDsunbet1'
+param AVDsubnetAddressPrefix string = '10.0.0.0/24'
+param AVDnsgName string = 'AVDnsg'
+
 
 resource hostPool 'Microsoft.DesktopVirtualization/hostPools@2023-11-01-preview' = if (newBuild) {
   name: hostPoolName
@@ -67,7 +64,6 @@ resource hostPool 'Microsoft.DesktopVirtualization/hostPools@2023-11-01-preview'
     preferredAppGroupType: 'Desktop'
     personalDesktopAssignmentType: personalDesktopAssignmentType
     maxSessionLimit: maxSessionLimit
-    validationEnvironment: false
   }
 }
 
@@ -78,12 +74,9 @@ resource applicationGroup 'Microsoft.DesktopVirtualization/applicationGroups@202
   properties: {
     friendlyName: appGroupFriendlyName
     applicationGroupType: 'Desktop'
-    hostPoolArmPath: resourceId('Microsoft.DesktopVirtualization/hostpools', hostPoolName)
+    hostPoolArmPath: hostPool.id
     description: 'Deskop Application Group created through GitHub Actions.'
   }
-  dependsOn: [
-    hostPool
-  ]
 }
 
 resource workspace 'Microsoft.DesktopVirtualization/workspaces@2023-11-01-preview' = if (newBuild) {
@@ -92,10 +85,39 @@ resource workspace 'Microsoft.DesktopVirtualization/workspaces@2023-11-01-previe
   tags: tags
   properties: {
     friendlyName: workspaceFriendlyName
-    applicationGroupReferences: applicationGroupReferencesArr
+    applicationGroupReferences: [
+      applicationGroup.id
+    ]
   }
-  dependsOn: [
-    applicationGroup
-  ]
+}
 
+resource AVDnetwork 'Microsoft.Network/virtualNetworks@2023-06-01' = if (newBuild) {
+  name: AVDnetworkname
+  location: location
+  tags: tags
+  properties: {
+    addressSpace: {
+      addressPrefixes: [
+        AVDvnetAddressPrefix
+      ]
+      
+    }
+    subnets: [
+      {
+        name: AVDsubnet1name
+        properties: {
+          addressPrefix: AVDsubnetAddressPrefix
+          networkSecurityGroup: {
+            id: AVDnsg.id
+          }
+        }
+      }
+    ]
+  }
+}
+
+resource AVDnsg 'Microsoft.Network/networkSecurityGroups@2023-06-01' = if (newBuild) {
+  name: AVDnsgName
+  location: location
+  tags: tags
 }
