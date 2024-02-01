@@ -51,6 +51,9 @@ param AVDsubnet1name string = 'AVDsunbet1'
 param AVDsubnetAddressPrefix string = '10.0.0.0/24'
 param AVDnsgName string = 'AVDnsg'
 
+// gallary and image parameters
+param galleryName string = 'testGallery'
+
 
 resource hostPool 'Microsoft.DesktopVirtualization/hostPools@2023-11-01-preview' = if (newBuild) {
   name: hostPoolName
@@ -120,4 +123,9 @@ resource AVDnsg 'Microsoft.Network/networkSecurityGroups@2023-06-01' = if (newBu
   name: AVDnsgName
   location: location
   tags: tags
+}
+
+resource acg 'Microsoft.Compute/galleries@2022-08-03' = {
+  name: galleryName
+  location: location
 }
