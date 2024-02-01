@@ -64,6 +64,7 @@ resource hostPool 'Microsoft.DesktopVirtualization/hostPools@2023-11-01-preview'
   properties: {
     friendlyName: hostPoolFriendlyName
     hostPoolType: hostPoolType
+    managementType: 'Standard'
     loadBalancerType: loadBalancerType
     preferredAppGroupType: 'Desktop'
     personalDesktopAssignmentType: personalDesktopAssignmentType
