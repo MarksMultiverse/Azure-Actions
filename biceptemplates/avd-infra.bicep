@@ -1,9 +1,6 @@
 param location string = resourceGroup().location
 
 param tags object = {
-  Environment: 'Prod'
-  Department: 'IT'
-  Supportedby: 'Mark'
   Project: 'Automate-AVD-Github-Actions'
   Responsible: 'mark.tilleman@cegeka.com'
 }
@@ -42,6 +39,7 @@ param hostPoolFriendlyName string = 'testHP'
 
 @description('Name of the AVD Workspace to used for this deployment')
 param workspaceName string = 'ABRI-AVD-PROD'
+param workspaceFriendlyName string = 'testWorkspace'
 param appGroupFriendlyName string = 'testAP'
 
 // @description('Log Analytics workspace ID to join AVD to.')
@@ -51,11 +49,11 @@ param appGroupFriendlyName string = 'testAP'
 // param logworkspaceName string
 
 @description('List of application group resource IDs to be added to Workspace. MUST add existing ones!')
-// param applicationGroupReferences string
+param applicationGroupReferences string
 
 var appGroupName = '${hostPoolName}-DAG'
-// var appGroupResourceID = array(resourceId('Microsoft.DesktopVirtualization/applicationgroups/', appGroupName))
-// var applicationGroupReferencesArr = applicationGroupReferences == '' ? appGroupResourceID : concat(split(applicationGroupReferences, ','), appGroupResourceID)
+var appGroupResourceID = array(resourceId('Microsoft.DesktopVirtualization/applicationgroups/', appGroupName))
+var applicationGroupReferencesArr = applicationGroupReferences == '' ? appGroupResourceID : concat(split(applicationGroupReferences, ','), appGroupResourceID)
 
 resource hostPool 'Microsoft.DesktopVirtualization/hostPools@2023-11-01-preview' = if (newBuild) {
   name: hostPoolName
@@ -93,7 +91,8 @@ resource workspace 'Microsoft.DesktopVirtualization/workspaces@2023-11-01-previe
   location: location
   tags: tags
   properties: {
-    // applicationGroupReferences: applicationGroupReferencesArr
+    friendlyName: workspaceFriendlyName
+    applicationGroupReferences: applicationGroupReferencesArr
   }
   dependsOn: [
     applicationGroup
