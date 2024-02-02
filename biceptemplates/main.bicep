@@ -60,7 +60,7 @@ resource RGAVDvms 'Microsoft.Resources/resourceGroups@2023-07-01' = if (newBuild
 // import modules
 module vnet 'avd-vnet.bicep' = if (newBuild) {
   scope: RGAVDinfra
-  name: 'VNET deployment'
+  name: 'VNET-deployment'
   params: {
     location: location
     tags: tags
@@ -74,7 +74,7 @@ module vnet 'avd-vnet.bicep' = if (newBuild) {
 
 module infra 'avd-infra.bicep' = if (newBuild) {
   scope: RGAVDinfra
-  name: 'infra deployment'
+  name: 'infra-deployment'
   params: {
     location: location
     tags: tags
