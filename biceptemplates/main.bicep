@@ -39,10 +39,43 @@ param loadBalancerType string = 'BreadthFirst'
 @description('Friendly Name of the Host Pool, this is visible via the AVD client')
 param hostPoolFriendlyName string = 'testHP'
 @description('Name of the AVD Workspace to used for this deployment')
-param workspaceName string = 'ABRI-AVD-PROD'
+param workspaceName string = 'TEST-AVD-PROD'
 param workspaceFriendlyName string = 'testWorkspace'
 param appGroupFriendlyName string = 'testAP'
 param galleryName string = 'testGallery'
+
+// FSlogix parameters
+@minLength(3)
+@maxLength(24)
+param saavdname string = 'saavdfslogixtesting' // only lowercase letters
+@allowed([
+  'Premium_LRS'
+  'Premium_ZRS'
+  'Standard_LRS'
+  'Standard_ZRS'
+])
+param saavdskuname string = 'Premium_LRS'
+param saavdkind string = 'FileStorage'
+
+// image parameters
+param utc string = utcNow('yyyy.MM.dd')
+param imageDefinitionName string = 'testimagedef'
+param imageOffer string = 'office-365'
+param imagePublisher string = 'microsoftwindowsdesktop'
+param imageSKU string = 'win11-23h2-avd-m365'
+param imageOSstate string = 'Generalized'
+param imageOStype string = 'Windows'
+
+// sessionhosts parameters
+param vmPrefix string = 'testpc'
+param AVDnumberOfInstances int = 3
+param currentInstances int = 0
+param enableAcceleratedNetworking bool = true
+param vmSize string = 'Standard_D2s_v3'
+param adminUsername string = 'localadmin'
+param vmDiskType string = 'Premium_LRS'
+@secure()
+param adminPassword string = 'Halloootjes124@'
 
 // create resource groups
 resource RGAVDinfra 'Microsoft.Resources/resourceGroups@2023-07-01' = if (newBuild) {
@@ -88,5 +121,50 @@ module infra 'avd-infra.bicep' = if (newBuild) {
     personalDesktopAssignmentType: personalDesktopAssignmentType
     workspaceFriendlyName: workspaceFriendlyName
     workspaceName: workspaceName
+  }
+}
+
+module fslogix 'avd-FSLogix.bicep' = {
+  scope:RGAVDinfra 
+  name: 'FSlogix-deployment'
+  params: {
+    location: location
+    saavdkind: saavdkind
+    saavdname: saavdname
+    saavdskuname: saavdskuname
+  }
+}
+
+module image 'avd-image.bicep' = {
+  scope: RGAVDinfra
+  name: 'image-deployment'
+  params: {
+    location: location
+    galleryName: galleryName
+    imageDefinitionName: imageDefinitionName
+    imageOffer: imageOffer
+    imageOSstate: imageOSstate
+    imageOStype: imageOStype
+    imagePublisher: imagePublisher
+    imageSKU: imageSKU
+    utc: utc
+  }
+}
+
+module sessionhosts 'avd-sessionhosts.bicep' = {
+  scope: RGAVDvms
+  name: 'session-hosts-deployment'
+  params: {
+    AVDnumberOfInstances: AVDnumberOfInstances
+    currentInstances: currentInstances
+    adminPassword: adminPassword
+    adminUsername: adminUsername
+    enableAcceleratedNetworking: enableAcceleratedNetworking
+    location: location
+    tags: tags
+    vmDiskType: vmDiskType
+    vmPrefix: vmPrefix
+    vmSize: vmSize
+    subnetID: vnet.outputs.subnetId
   }
 }
