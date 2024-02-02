@@ -1,61 +1,19 @@
-param location string = resourceGroup().location
+param location string
+param tags object
+param hostPoolType string
+param hostPoolName string
+param personalDesktopAssignmentType string
+param maxSessionLimit int
+param loadBalancerType string
+param hostPoolFriendlyName string
+param workspaceName string
+param workspaceFriendlyName string
+param appGroupFriendlyName string
+param galleryName string
 
-param tags object = {
-  Project: 'Automate-AVD-Github-Actions'
-  Responsible: 'mark.tilleman@cegeka.com'
-}
-
-// param workspaceLocation string
-
-@description('If true Host Pool, App Group and Workspace will be created. Default is to join Session Hosts to existing AVD environment')
-param newBuild bool = true
-
-// hostPool parameters
-@allowed([
-  'Personal'
-  'Pooled'
-])
-param hostPoolType string = 'Pooled'
-param hostPoolName string = 'testHP'
-
-@allowed([
-  'Automatic'
-  'Direct'
-])
-param personalDesktopAssignmentType string = 'Direct'
-param maxSessionLimit int = 12
-
-@allowed([
-  'BreadthFirst'
-  'DepthFirst'
-  'Persistent'
-])
-param loadBalancerType string = 'BreadthFirst'
-
-@description('Friendly Name of the Host Pool, this is visible via the AVD client')
-param hostPoolFriendlyName string = 'testHP'
-
-// workspace parameters
-@description('Name of the AVD Workspace to used for this deployment')
-param workspaceName string = 'ABRI-AVD-PROD'
-param workspaceFriendlyName string = 'testWorkspace'
-
-// applicationGroup parameters
-param appGroupFriendlyName string = 'testAP'
 var appGroupName = '${hostPoolName}-DAG'
 
-// vnet parameters
-param AVDnetworkname string = 'AVDnetwork'
-param AVDvnetAddressPrefix string ='10.0.0.0/24'
-param AVDsubnet1name string = 'AVDsunbet1'
-param AVDsubnetAddressPrefix string = '10.0.0.0/24'
-param AVDnsgName string = 'AVDnsg'
-
-// gallary and image parameters
-param galleryName string = 'testGallery'
-
-
-resource hostPool 'Microsoft.DesktopVirtualization/hostPools@2023-11-01-preview' = if (newBuild) {
+resource hostPool 'Microsoft.DesktopVirtualization/hostPools@2023-11-01-preview' = {
   name: hostPoolName
   location: location
   tags: tags
@@ -70,7 +28,7 @@ resource hostPool 'Microsoft.DesktopVirtualization/hostPools@2023-11-01-preview'
   }
 }
 
-resource applicationGroup 'Microsoft.DesktopVirtualization/applicationGroups@2023-11-01-preview' = if (newBuild) {
+resource applicationGroup 'Microsoft.DesktopVirtualization/applicationGroups@2023-11-01-preview' = {
   name: appGroupName
   location: location
   tags: tags
@@ -82,7 +40,7 @@ resource applicationGroup 'Microsoft.DesktopVirtualization/applicationGroups@202
   }
 }
 
-resource workspace 'Microsoft.DesktopVirtualization/workspaces@2023-11-01-preview' = if (newBuild) {
+resource workspace 'Microsoft.DesktopVirtualization/workspaces@2023-11-01-preview' = {
   name: workspaceName
   location: location
   tags: tags
@@ -92,37 +50,6 @@ resource workspace 'Microsoft.DesktopVirtualization/workspaces@2023-11-01-previe
       applicationGroup.id
     ]
   }
-}
-
-resource AVDnetwork 'Microsoft.Network/virtualNetworks@2023-06-01' = if (newBuild) {
-  name: AVDnetworkname
-  location: location
-  tags: tags
-  properties: {
-    addressSpace: {
-      addressPrefixes: [
-        AVDvnetAddressPrefix
-      ]
-      
-    }
-    subnets: [
-      {
-        name: AVDsubnet1name
-        properties: {
-          addressPrefix: AVDsubnetAddressPrefix
-          networkSecurityGroup: {
-            id: AVDnsg.id
-          }
-        }
-      }
-    ]
-  }
-}
-
-resource AVDnsg 'Microsoft.Network/networkSecurityGroups@2023-06-01' = if (newBuild) {
-  name: AVDnsgName
-  location: location
-  tags: tags
 }
 
 resource acg 'Microsoft.Compute/galleries@2022-08-03' = {
