@@ -1,21 +1,16 @@
-param location string = resourceGroup().location
-param artifactsLocation string = 'https://github.com/Azure/RDS-Templates/blob/master/DSC/Configuration.zip'
-
-param tags object = {
-  Project: 'Automate-AVD-Github-Actions'
-  Responsible: 'mark.tilleman@cegeka.com'
-}
-
-param vmPrefix string = 'testpc'
+param location string
+// param artifactsLocation string = 'https://github.com/Azure/RDS-Templates/blob/master/DSC/Configuration.zip'
+param tags object
+param vmPrefix string
 param AVDnumberOfInstances int
 param currentInstances int
-param enableAcceleratedNetworking bool = true
-param vmSize string = 'Standard_D2s_v3'
-param adminUsername string = 'localadmin'
-param vmDiskType string = 'Premium_LRS'
-
+param enableAcceleratedNetworking bool
+param vmSize string
+param adminUsername string
+param vmDiskType string
 @secure()
-param adminPassword string = 'Halloootjes124@'
+param adminPassword string
+param subnetID string
 
 var avSetSKU = 'Aligned'
 
@@ -81,11 +76,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2023-09-01' =[for i in range(0,AV
         createOption: 'FromImage'
         deleteOption: 'Delete'
       }
-      imageReference: {
-          //id: resourceId(sharedImageGalleryResourceGroup, 'Microsoft.Compute/galleries/images/versions', sharedImageGalleryName, sharedImageGalleryDefinitionname, sharedImageGalleryVersionName)
-          id: '/subscriptions/${sharedImageGallerySubscription}/resourceGroups/${sharedImageGalleryResourceGroup}/providers/Microsoft.Compute/galleries/${sharedImageGalleryName}/images/${sharedImageGalleryDefinitionname}/versions/${sharedImageGalleryVersionName}'
-      }
-      dataDisks: [
+            dataDisks: [
         
       ]
     }

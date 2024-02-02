@@ -1,17 +1,14 @@
-param location string = resourceGroup().location
-param galleryName string = 'testGallery'
-param utc string = utcNow('yyyy.MM.dd')
-
-
-param imageDefinitionName string = 'testimagedef'
-param imageOffer string = 'office-365'
-param imagePublisher string = 'microsoftwindowsdesktop'
-param imageSKU string = 'win11-23h2-avd-m365'
-param imageOSstate string = 'Generalized'
-param imageOStype string = 'Windows'
+param location string
+param galleryName string
+param utc string
+param imageDefinitionName string
+param imageOffer string
+param imagePublisher string
+param imageSKU string
+param imageOSstate string
+param imageOStype string
 
 var versionName = utc
-
 
 resource acg 'Microsoft.Compute/galleries@2022-08-03' existing = {
   name: galleryName
