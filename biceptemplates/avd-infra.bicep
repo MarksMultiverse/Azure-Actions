@@ -46,7 +46,7 @@ resource hostPool 'Microsoft.DesktopVirtualization/hostPools@2023-11-01-preview'
   }
 }
 
-output hostpoolToken string = reference(hostPool.id, '2021-01-14-preview').registratioInfo.token
+// output hostpoolToken string = reference(hostPool.id, '2021-01-14-preview').registratioInfo.token
 
 resource applicationGroup 'Microsoft.DesktopVirtualization/applicationGroups@2023-11-01-preview' = {
   name: appGroupName
