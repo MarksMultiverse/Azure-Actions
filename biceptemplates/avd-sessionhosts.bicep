@@ -76,9 +76,6 @@ resource vm 'Microsoft.Compute/virtualMachines@2023-09-01' =[for i in range(0,AV
         createOption: 'FromImage'
         deleteOption: 'Delete'
       }
-            dataDisks: [
-        
-      ]
     }
     networkProfile: {
       networkInterfaces: [

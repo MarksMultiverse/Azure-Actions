@@ -18,27 +18,12 @@ param AVDsubnetAddressPrefix string = '10.0.0.0/24'
 param AVDnsgName string = 'AVDnsg'
 
 // infra parameters
-@allowed([
-  'Personal'
-  'Pooled'
-])
 param hostPoolType string = 'Pooled'
 param hostPoolName string = 'testHP'
-@allowed([
-  'Automatic'
-  'Direct'
-])
 param personalDesktopAssignmentType string = 'Direct'
 param maxSessionLimit int = 12
-@allowed([
-  'BreadthFirst'
-  'DepthFirst'
-  'Persistent'
-])
 param loadBalancerType string = 'BreadthFirst'
-@description('Friendly Name of the Host Pool, this is visible via the AVD client')
 param hostPoolFriendlyName string = 'testHP'
-@description('Name of the AVD Workspace to used for this deployment')
 param workspaceName string = 'TEST-AVD-PROD'
 param workspaceFriendlyName string = 'testWorkspace'
 param appGroupFriendlyName string = 'testAP'
@@ -57,6 +42,7 @@ param saavdname string = 'saavdfslogixtesting' // only lowercase letters
 param saavdskuname string = 'Premium_LRS'
 param saavdkind string = 'FileStorage'
 
+/*
 // image parameters
 param utc string = utcNow('yyyy.MM.dd')
 param imageDefinitionName string = 'testimagedef'
@@ -76,6 +62,7 @@ param adminUsername string = 'localadmin'
 param vmDiskType string = 'Premium_LRS'
 @secure()
 param adminPassword string = 'Halloootjes124@'
+*/
 
 // create resource groups
 resource RGAVDinfra 'Microsoft.Resources/resourceGroups@2023-07-01' = if (newBuild) {
@@ -135,6 +122,7 @@ module fslogix 'avd-FSLogix.bicep' = {
   }
 }
 
+/*
 module image 'avd-image.bicep' = {
   scope: RGAVDinfra
   name: 'image-deployment'
@@ -168,3 +156,4 @@ module sessionhosts 'avd-sessionhosts.bicep' = {
     subnetID: vnet.outputs.subnetId
   }
 }
+*/

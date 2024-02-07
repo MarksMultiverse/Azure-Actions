@@ -1,15 +1,29 @@
 param location string
 param tags object
+@allowed([
+  'Personal'
+  'Pooled'
+])
 param hostPoolType string
 param hostPoolName string
+@allowed([
+  'Automatic'
+  'Direct'
+])
 param personalDesktopAssignmentType string
 param maxSessionLimit int
+@allowed([
+  'BreadthFirst'
+  'DepthFirst'
+  'Persistent'
+])
 param loadBalancerType string
 param hostPoolFriendlyName string
 param workspaceName string
 param workspaceFriendlyName string
 param appGroupFriendlyName string
 param galleryName string
+param baseTime string = utcNow('u')
 
 var appGroupName = '${hostPoolName}-DAG'
 
@@ -25,8 +39,14 @@ resource hostPool 'Microsoft.DesktopVirtualization/hostPools@2023-11-01-preview'
     preferredAppGroupType: 'Desktop'
     personalDesktopAssignmentType: personalDesktopAssignmentType
     maxSessionLimit: maxSessionLimit
+    registrationInfo: {
+      expirationTime: dateTimeAdd(baseTime, 'P1D')
+      registrationTokenOperation: 'Update'
+    }
   }
 }
+
+output hostpoolToken string = reference(hostPool.id, '2021-01-14-preview').registratioInfo.token
 
 resource applicationGroup 'Microsoft.DesktopVirtualization/applicationGroups@2023-11-01-preview' = {
   name: appGroupName

@@ -31,5 +31,24 @@ resource galleryDefinition 'Microsoft.Compute/galleries/images@2022-08-03' = {
 
 resource imageVersion 'Microsoft.Compute/galleries/images/versions@2022-08-03' = {
   name:  '${galleryName}/${imageDefinitionName}/${versionName}'
+  parent: galleryDefinition
   location: location
+  tags: {}
+  properties: {
+    publishingProfile: {
+      replicaCount: 1
+    }
+    storageProfile: {
+      source: {
+        id: imageSource
+      }
+      osDiskImage: {
+        hostCaching: 'ReadWrite' 
+      }
+    }
+  }
 }
+
+output galleryId string = acg.id
+output galleryDefinitionId string = galleryDefinition.id
+output imageVersionId string = imageVersion.id
