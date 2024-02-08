@@ -111,7 +111,8 @@ module infra 'avd-infra.bicep' = if (newBuild) {
   }
 }
 
-module fslogix 'avd-FSLogix.bicep' = {
+/*
+module fslogix 'avd-FSLogix.bicep' = if (newBuild) {
   scope:RGAVDinfra 
   name: 'FSlogix-deployment'
   params: {
@@ -122,7 +123,6 @@ module fslogix 'avd-FSLogix.bicep' = {
   }
 }
 
-/*
 module image 'avd-image.bicep' = {
   scope: RGAVDinfra
   name: 'image-deployment'

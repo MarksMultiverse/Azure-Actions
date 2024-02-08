@@ -31,7 +31,6 @@ resource galleryDefinition 'Microsoft.Compute/galleries/images@2022-08-03' = {
 
 resource imageVersion 'Microsoft.Compute/galleries/images/versions@2022-08-03' = {
   name:  '${galleryName}/${imageDefinitionName}/${versionName}'
-  parent: galleryDefinition
   location: location
   tags: {}
   properties: {

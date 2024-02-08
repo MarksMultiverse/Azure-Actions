@@ -75,7 +75,11 @@ resource vm 'Microsoft.Compute/virtualMachines@2023-09-01' =[for i in range(0,AV
         osType: 'Windows'
         createOption: 'FromImage'
         deleteOption: 'Delete'
-      }
+      } /*
+      imageReference: {
+        //id: resourceId(sharedImageGalleryResourceGroup, 'Microsoft.Compute/galleries/images/versions', sharedImageGalleryName, sharedImageGalleryDefinitionname, sharedImageGalleryVersionName)
+        id: '/subscriptions/${sharedImageGallerySubscription}/resourceGroups/${sharedImageGalleryResourceGroup}/providers/Microsoft.Compute/galleries/${sharedImageGalleryName}/images/${sharedImageGalleryDefinitionname}/versions/${sharedImageGalleryVersionName}'
+      }*/
     }
     networkProfile: {
       networkInterfaces: [
