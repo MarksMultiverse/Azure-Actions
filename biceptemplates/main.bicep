@@ -9,6 +9,8 @@ param tags object = {
 
 param RGnameAVDinfra string = 'RG01MARK'
 param RGnameAVDvms string = 'RG02MARK'
+param RGnameAVDimage string = 'RG03MARK'
+param RGnameAIB string = 'RG04MARK'
 
 // vnet parameters
 param AVDnetworkname string = 'AVDnetwork'
@@ -77,6 +79,17 @@ resource RGAVDvms 'Microsoft.Resources/resourceGroups@2023-07-01' = if (newBuild
   tags: tags
 }
 
+resource RGAVDimage 'Microsoft.Resources/resourceGroups@2023-07-01' = {
+  name: RGnameAVDimage
+  location: location
+}
+
+resource RGAVDimagebuild 'Microsoft.Resources/resourceGroups@2023-07-01' = {
+  name: RGnameAIB
+  location: location
+  tags: tags
+}
+
 // import modules
 module vnet 'avd-vnet.bicep' = if (newBuild) {
   scope: RGAVDinfra
@@ -111,6 +124,14 @@ module infra 'avd-infra.bicep' = if (newBuild) {
   }
 }
 
+module role 'avd-aibrole.bicep' = {
+  scope: RGAVDimage
+  name: 'ID-and-role-deployment'
+  params: {
+    location: location
+  }
+}
+
 /*
 module fslogix 'avd-FSLogix.bicep' = if (newBuild) {
   scope:RGAVDinfra 
@@ -128,6 +149,7 @@ module image 'avd-image.bicep' = {
   name: 'image-deployment'
   params: {
     location: location
+    RGnameAIB: RGnameAIB
     galleryName: galleryName
     imageDefinitionName: imageDefinitionName
     imageOffer: imageOffer
